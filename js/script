@@ -3,26 +3,44 @@
 let numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '');
 
 const personalMovieDB = {
-    count : '',
-    movie : {},
-    actors : {},
-    genres : [],
-    privat : false
+    count: numberOfFilms,
+    movie: {},
+    actors: {},
+    genres: [],
+    privat: false,
+    test : ''
 };
 
-personalMovieDB.count = numberOfFilms;
+for (let i = 0; i < 2; i++) {
+    let lastFilms = prompt('Один из последних просмотренных фильмов?', ''),
+        filmRating = prompt('На сколько оцените его?', '');
 
-function prompts() {
-    let lastFilms = prompt('Один из последних просмотренных фильмов?', '');
-    let filmRating = prompt('На сколько оцените его?', '');
-
-    personalMovieDB.movie[lastFilms] = filmRating;    
-}
-
-function cycle(foo) {
-    for (let i = 0; i < 2; i++){
-       prompts()
+    if (lastFilms != null && filmRating != null && lastFilms != '' && lastFilms != '' && lastFilms.length < 50) {
+        personalMovieDB.movie[lastFilms] = filmRating;
+    } else {
+        alert('Опять?');
+        i--;
     }
 }
 
-cycle();
+switch (true) {
+    case numberOfFilms === 0: {
+        alert('Ошибка!');
+        break;
+    }
+    case numberOfFilms < 10: {
+        alert('Просмотренно довольно мало фильмов');
+        break
+    }
+    case numberOfFilms < 30: {
+        alert('Вы классический зритель');
+        break
+    }
+    case numberOfFilms > 30: {
+        alert('А Вы киноман!');
+        break
+    }
+    default:
+        alert('Произошла ошибка');
+        break;
+};
