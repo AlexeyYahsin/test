@@ -1,92 +1,106 @@
 'use strict'
 
 
-let numberOfFilms;
-
-function start() {
-
-    numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '');
-
-    while(numberOfFilms == '' || numberOfFilms == null || isNaN(numberOfFilms)){
-        alert('Не верный ответ!')
-        start();
-    }
-}
-
 const personalMovieDB = {
-    count: numberOfFilms,
+
+    count: '',
     movie: {},
     actors: {},
     genres: [],
     privat: false,
-    test : ''
-};
-
-function rememberMyFilms(obj) {
     
-    for (let i = 0; i < 2; i++) {
+    start: function () {
 
-        let lastFilms = prompt('Один из последних просмотренных фильмов?', ''),
-            filmRating = prompt('На сколько оцените его?', '');
-    
-        if (lastFilms != null && filmRating != null && lastFilms != '' && lastFilms != '' && lastFilms.length < 50) {
-            obj.movie[lastFilms] = filmRating;
-        } else {
-            alert('Опять?');
-            i--;
+        this.count = +prompt('Сколько фильмов вы уже посмотрели?', '');
+        while (this.count == '' || isNaN(this.count)) {
+            alert('Не верный ответ!')
+            this.start();
         }
-    }
-}
 
-function detectPersonalLevel() {
-    switch (true) {
-
-        case numberOfFilms === 0: {
-            alert('Ошибка!');
-            break;
+        if (this.count == null){
+            return;
         }
-        case numberOfFilms < 10: {
-            alert('Просмотренно довольно мало фильмов');
-            break
+            this.rememberMyFilms();
+    },
+
+    rememberMyFilms: function () {
+
+        for (let i = 0; i < 2; i++) {
+
+            let lastFilms = prompt('Один из последних просмотренных фильмов?', ''),
+                filmRating = prompt('На сколько оцените его?', '');
+
+            if (lastFilms != null && filmRating != null && lastFilms != '' && lastFilms != '' && lastFilms.length < 50) {
+                this.movie[lastFilms] = filmRating;
+            } else {
+                alert('Опять?');
+                i--;
+            }
         }
-        case numberOfFilms < 30: {
-            alert('Вы классический зритель');
-            break
+             this.detectPersonalLevel();
+    },
+
+    detectPersonalLevel: function(){
+
+        switch (true) {
+
+            case this.count === 0: {
+                alert('Ошибка!');
+                break;
+            }
+            case this.count < 10: {
+                alert('Просмотренно довольно мало фильмов');
+                this.shovMyBD();
+                break
+            }
+            case this.count < 30: {
+                alert('Вы классический зритель');
+                this.shovMyBD();
+                break
+            }
+            case this.count > 30: {
+                alert('А Вы киноман!');
+                this.shovMyBD();
+                break
+            }
+            default:
+                alert('Произошла ошибка');
+                break;
         }
-        case numberOfFilms > 30: {
-            alert('А Вы киноман!');
-            break
+    },
+
+    shovMyBD: function(){
+
+        if (this.privat === false){
+            console.log(this);
+            this.toggleVisibleMyBD();
         }
-        default:
-            alert('Произошла ошибка');
-            break;
-    }
-}
 
-function shovMyBD(obj) {
+        this.writeYourGenres();
+    },
 
-    if (obj.privat === false){
-        console.log(obj);
-    }
-}
+    toggleVisibleMyBD: function (){
+        this.privat = !this.privat;
+    },
 
-function writeYourGenres(obj) {
+    writeYourGenres: function () {
 
-    for( let i = 1; i < 4; i++){
+            const guest = confirm('Хотите назвать любимые жанры?');
+            if (guest) {
+                for (let i = 1; i < 4; i++) {
 
-        let film = prompt(`Введите любимый жанр под номером ${i}` , '');
-        obj.genres[i - 1] = film;
-    }    
-}
+                    let film = prompt(`Введите любимый жанр под номером ${i}`, '');
+                    this.genres[i - 1] = film;
+                }
+            }else{
+                this.writeYourGenres();
+            }
 
-start();
-rememberMyFilms(personalMovieDB);
-detectPersonalLevel();
+            this.genres.forEach( (item, index, array)=>{
+                console.log(`Любимый жанр #${index + 1} - это ${item}`)
+            })
+        },
 
-const guest = confirm('Хотите назвать любимые жанры?');
-if (guest) {
+    };
 
-        writeYourGenres(personalMovieDB);
-}
-
-shovMyBD(personalMovieDB);
+personalMovieDB.start();
